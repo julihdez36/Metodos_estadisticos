@@ -1,0 +1,57 @@
+
+# GEIH 2023 ---------------------------------------------------------------
+
+
+# Caracteristicas generales -----------------------------------------------
+
+install.packages('data.table')
+library(data.table)
+
+setwd('C:/Users/Julian/Desktop/Ciencia de datos/GEIH/GEIH 2023')
+l_file <- list.files(recursive = T,full.names = T)
+
+# Nombre que deseas buscar
+file1 <- "Características generales, seguridad social en salud y educación.CSV"
+
+# Filtrar los elementos que contienen el nombre deseado
+
+grep(file1,l_file) #Busca el patrón que le pida
+length(grep(file1,l_file)) #Valido que sean 12 archivos
+
+files <- l_file[grep(file1,l_file)]
+
+lista_df <- list()
+
+meses <- list.files(full.names = F)[-3]
+
+for (i in meses) {
+  #Construimos ruta del archivo caracteristigas generales
+  ruta_archivo <- file.path(i, "CSV", "Características generales, seguridad social en salud y educación.CSV")
+  #Leemos el archivo 
+  data_tab <- fread(ruta_archivo)
+  #Lo guardamos en una lista
+  lista_df[[i]] <- data_tab
+}
+
+# Filtremos las variables de interés
+
+colnames(lista_df[[4]])
+
+var_names <- c("DIRECTORIO","SECUENCIA_P","ORDEN","HOGAR","MES","CLASE",
+               "FEX_C18","DPTO","P3271","P6040","P2057","P6080","P6070",
+               "P6160","P3042","P3042S1","P3038")
+length(var_names)
+
+lista_df <- lapply(lista_df, function(dt) dt[, ..var_names])
+
+#Consolidamos nuestro df final
+gen_23 <- rbindlist(lista_df)
+
+#Guardemos la base
+
+write.csv(gen_23, file = "C:/Users/Julian/Desktop/Ciencia de datos/GEIH/gen_23.csv")
+
+
+# Ocupados ----------------------------------------------------------------
+
+
