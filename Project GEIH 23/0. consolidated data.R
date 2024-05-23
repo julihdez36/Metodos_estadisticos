@@ -18,7 +18,7 @@ file1 <- "Características generales, seguridad social en salud y educación.CSV
 grep(file1,l_file) #Busca el patrón que le pida
 length(grep(file1,l_file)) #Valido que sean 12 archivos
 
-files <- l_file[grep(file1,l_file)]
+files <- l_file[grep(file1,l_file)] #Archivos area
 
 lista_df <- list()
 
