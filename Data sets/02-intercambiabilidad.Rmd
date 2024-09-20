@@ -1,0 +1,149 @@
+---
+title: "Intercambiabilidad"
+author: 
+- Juan Sosa PhD
+- Email   jcsosam@unal.edu.co
+- GitHub  https://github.com/jstats1702 
+date: ""
+output:
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+# Introducción
+
+La **inferencia Bayesiana** sobre el conjunto de parámetros $\boldsymbol{\theta} = (\theta_1,\ldots,\theta_k)\in\Theta$ a partir de los datos $\boldsymbol{y} = (y_1,\ldots,y_n)\in\mathcal{Y}^n$ requiere que se especifique de manera inequívoca una distribución conjunta $p(\boldsymbol{y}, \boldsymbol{\theta})$.
+
+La forma natural de especificar $p(\boldsymbol{y}, \boldsymbol{\theta})$ es a partir de la factorización 
+$$
+p(\boldsymbol{y}, \boldsymbol{\theta}) = p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})\,,
+$$
+donde:
+
+- $p(\boldsymbol{y}\mid\boldsymbol{\theta})$ caracteriza el mecanismo aleatorio para generar $\boldsymbol{y}$ a partir de $\boldsymbol{\theta}$.
+- $p(\boldsymbol{\theta})$ caracteriza el estado de información acerca de $\boldsymbol{\theta}$ externa a $\boldsymbol{y}$.
+
+Se modela el comportamiento de $\boldsymbol{y}$ **jerárquicamente**, modelando primero el comportamiento de $\boldsymbol{\theta}$, y luego, modelando el comportamiento de $\boldsymbol{y}$ dado $\boldsymbol{\theta}$.
+
+
+# Inferencia, predicción y toma de decisiones óptimas
+
+Una vez se observa $\boldsymbol{y}$, ¿cómo se deberían llevar a cabo los procesos de inferencia, predicción y toma de decisiones de manera óptima?
+
+## Inferencia {-}
+
+La **distribución posterior** de $\boldsymbol{\theta}$ se calcula por medio del **Teorema de Bayes**:
+$$
+p(\boldsymbol{\theta}\mid \boldsymbol{y}) = 
+ \frac{p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})}{\int_\Theta p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})\,\text{d}\boldsymbol{\theta}}\propto p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})\,,
+$$
+la cual caracteriza el estado de **información actualizada** acerca de $\boldsymbol{\theta}$ bajo la evidencia empírica que proporciona $\boldsymbol{y}$.
+
+
+## Predicción {-}
+
+
+La **distribución predictiva posterior** de datos futuros $\boldsymbol{y}^*$ se calcula por medio de la expresión:
+$$
+p(\boldsymbol{y}^*\mid\boldsymbol{y}) 
+= \int_\Theta p(\boldsymbol{y}^*,\boldsymbol{\theta}\mid\boldsymbol{y})\,\text{d}\boldsymbol{\theta} 
+= \int_\Theta p(\boldsymbol{y}^*\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta}\mid\boldsymbol{y})\,\text{d}\boldsymbol{\theta}\,, 
+$$
+siempre que no haya información sobre $\boldsymbol{y}^*$ contenida en $\boldsymbol{y}$ dado $\boldsymbol{\theta}$.
+
+
+## Toma de decisiones {-}
+
+Para tomar una decisión óptima se debe especificar un **conjunto de acciones factibles** $\mathcal{A}$ junto con una **función de utilidad** $U(a,\boldsymbol{\theta})$ que cuantifique la utilidad (monetaria o de otro tipo) que se obtiene al elegir la acción $a\in\mathcal{A}$ bajo un valor específico de $\boldsymbol{\theta}\in\Theta$.
+
+La **decisión óptima** consiste en elegir la acción $a^*$ que maximiza la utilidad esperada posterior:
+$$
+a^* = \argmax_{a\in\mathcal{A}} \textsf{E}(U(a,\boldsymbol{\theta})\mid\boldsymbol{y})
+ = \int_\Theta U(a,\boldsymbol{\theta})\,p(\boldsymbol{\theta}\mid\boldsymbol{y})\,\text{d}\boldsymbol{\theta}\,.
+$$
+
+
+# Independencia condicional
+
+Suponga que $y_1,\ldots,y_n$ son variables aleatorias y que $\boldsymbol{\theta}$ es el parámetro que caracteriza el mecanismo aleatorio bajo el cual se generan estas variables. 
+
+Las variables aleatorias $y_1,\ldots,y_n$ se denominan **condicionalmente independientes** dado $\boldsymbol{\theta}$, si
+$$
+p(y_1,\ldots,y_n\mid\boldsymbol{\theta}) = p(y_1\mid\boldsymbol{\theta})\times\ldots\times p(y_n\mid\boldsymbol{\theta})\,,
+$$
+para todo $y_i\in\mathcal{Y}$, con $i=1,\ldots,n$, y todo $\boldsymbol{\theta}\in\Theta$.
+
+Si $y_1,\ldots,y_n$ son condicionalmente independientes dado $\boldsymbol{\theta}$, entonces
+$$
+\textsf{Pr}(y_1\in A_1,\ldots,y_n\in A_n\mid\boldsymbol{\theta}) = \textsf{Pr}(y_1\in A_1\mid\boldsymbol{\theta})\times\ldots\times\textsf{Pr}(y_n\in A_n\mid\boldsymbol{\theta})\,,
+$$
+para cualquier colección de conjuntos $A_1,\ldots,A_n$, y además,
+$$
+\textsf{Pr}(y_i\in A_i\mid y_j\in A_j,\boldsymbol{\theta}) = \textsf{Pr}(y_i\in A_i\mid\boldsymbol{\theta})\,,
+$$
+lo que quiere decir que $y_j$ no proporciona información adicional sobre $y_i$ más allá de $\boldsymbol{\theta}$.
+
+Si las variables aleatorias $y_1,\ldots,y_n$ se generan a partir de un **mecanismo aleatorio común**, entonces
+$$
+p(\boldsymbol{y}\mid\boldsymbol{\theta}) = \prod_{i=1}^n p(y_i\mid\boldsymbol{\theta})\,,
+$$
+en cuyo caso se dice que $y_1,\ldots,y_n$ son **condicionalmente independientes e idénticamente distribuidas**, lo que se denota con 
+$$
+y_i\mid\boldsymbol{\theta} \stackrel{\text{iid}}{\sim} p(y_i\mid\boldsymbol{\theta})\,,\qquad i=1,\ldots,n\,.
+$$
+
+
+# Intercambiabilidad
+
+Las variables aleatorias $y_1,\ldots,y_n$ se denominan **intercambiables** si su distribución marginal conjunta es **simétrica**, en el sentido de que cualquier permutación del orden en el que se etiqueten las variables deja su estructura probabilística inalterada.
+
+Sea $p(y_1,\ldots,y_n)$ la distribución marginal de $y_1,\ldots,y_n$. Si 
+$$
+p(y_1,\ldots,y_n) = p(y_{\pi(1)},\ldots,y_{\pi(n)})\,,
+$$ 
+para toda permutación $\pi(\cdot)$ de $\{1,\ldots,n\}$, entonces se dice que $y_1,\ldots,y_n$ son **intercambiables**.
+
+La intercambiabilidad indica que el orden en que se observan o recopilan los datos no afecta la distribución de probabilidad utilizada para modelar los datos.
+
+Si las variables aleatorias $y_1,\ldots,y_n$ son condicionalmente independientes dado $\boldsymbol{\theta}$, entonces $y_1,\ldots,y_n$ son intercambiables. 
+
+
+# Teorema de De Finetti
+
+Sea $y_1,\ldots,y_n$ una secuencia de variables aleatorias definida sobre el mismo espacio de resultados $\mathcal{Y}$. Si $y_1,\ldots,y_n$ es intercambiable para cualquier $n$, entonces la distribución marginal de $y_1,\ldots,y_n$ se puede expresar como
+$$
+p(y_1,\ldots,y_n) = \int_\Theta \left[\prod_{i=1}^n p(y_i\mid\boldsymbol{\theta})\right]\,p(\boldsymbol{\theta})\,\text{d}\boldsymbol{\theta}\,,
+$$
+para algún conjunto de parámetros $\boldsymbol{\theta}$, alguna distribución previa $p(\boldsymbol{\theta})$, y alguna distribución muestral común $p(y_i\mid\boldsymbol{\theta})$, para $i=1,\ldots,n$.
+
+El teorema de De Finetti justifica el uso del supuesto de independencia condicional en la formulación del modelo y permite utilizar distribuciones de probabilidad simples para modelar los datos condicionalmente.
+
+
+
+
+
+# Referencias
+
+
+```{r, eval = TRUE, echo=FALSE, out.width="25%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("Hoffcoverbook.jpg")
+```
+
+
+```{r, eval = TRUE, echo=FALSE, out.width="25%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("Gelmancoverbook.png")
+```
+
+
+```{r, eval = TRUE, echo=FALSE, out.width="25%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("Reichcoverbook.jpg")
+```
